@@ -57,5 +57,14 @@ inquirer.prompt([
         message: "please add any questions that you believe would be helpful to the project.",
         name: "questions"
     }
-]);
+]).then(function(data){
+    var fileName = data.name.join(" ") + ".md";
+    fs.writeFile(fileName, JSON.stringify(data, null, "\t"), function(error) {
+        if (error) {
+            return console.log(error);
+        } console.log("Success");
+    })
+
+})
+
 
