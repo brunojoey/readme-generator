@@ -1,0 +1,28 @@
+{
+  "name": "readme-generator",
+  "version": "0.0.1",
+  "description": "\"Generating a ReadMe through Node.JS\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunojoey/readme-generator.git"
+  },
+  "keywords": [
+    "Read",
+    "Me",
+    "Generation",
+    "Generator"
+  ],
+  "author": "Joey Bruno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunojoey/readme-generator/issues"
+  },
+  "homepage": "https://github.com/brunojoey/readme-generator#readme",
+  "dependencies": {
+    "inquirer": "^7.1.0"
+  }
+}
