@@ -70,27 +70,27 @@ inquirer.prompt({
     message: "Enter your GitHub username",
     name: "username"
 })
-.then(function({ username }) {
-    const queryUrl = `https://api.github.com/users/${username}`;
+    .then(function ({ username }) {
+        const queryUrl = `https://api.github.com/users/${username}`;
 
-    axios 
-    .get(queryUrl, )
-    .then(function(response){
-      const data = response.data;
-      console.log(response.data);
-      const email = data.email;
-      const avatar = data.avatar_url;
-      const questionsJSON = JSON.stringify(questions);
-      writeFileAsync(`${ username }-README.md`, questionsJSON).then(function() {
-          readFileAsync("index.js", avatar).then(function() {
-              questions.forEach(function(questionsJSON) {
-                console.log("Working");
-            }); 
-          })
-      .catch(function(error) {
-          console.log(error);
-          });
-      });
+        axios
+            .get(queryUrl)
+            .then(function (response) {
+                const data = response.data;
+                console.log(response.data);
+                const email = data.email;
+                const avatar = data.avatar_url;
+                const questionsJSON = JSON.stringify(questions);
+                writeFileAsync(`${username}-README.md`, questionsJSON).then(function () {
+                    readFileAsync("index.js", avatar).then(function () {
+                        questions.forEach(function (questionsJSON) {
+                            console.log("Working");
+                        });
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                });
+            });
     });
-  });
 
