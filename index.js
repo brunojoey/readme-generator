@@ -6,6 +6,8 @@ const util = require("util");
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 
+const userInput = [];
+
 const questions = [
     {
         type: "input",
@@ -59,6 +61,10 @@ const questions = [
     }
 ];
 
+// const questionsMessage  = questions.message;
+// const [ questionsName ]  = questions.name; 
+// // const [ questionsNameMessage ] = questionsMessage + "\n" + questionsName;
+// console.log(questionsNameMessage);
 
 inquirer.prompt({
     message: "Enter your GitHub username",
@@ -67,23 +73,24 @@ inquirer.prompt({
 .then(function({ username }) {
     const queryUrl = `https://api.github.com/users/${username}`;
 
-
     axios 
-    .get(`https://api.github.com/users/${username}`)
+    .get(queryUrl, )
     .then(function(response){
+      const data = response.data;
       console.log(response.data);
+      const email = data.email;
+      const avatar = data.avatar_url;
       const questionsJSON = JSON.stringify(questions);
-      console.log(questionsJSON);
-      const { data } = response.data;
-      writeFileAsync(`${ username }README.md`, data, function(error) {
-          readFileAsync("index.js", questionsJSON,"utf8")
+      writeFileAsync(`${ username }-README.md`, questionsJSON).then(function() {
+          readFileAsync("index.js", avatar).then(function() {
+              questions.forEach(function(questionsJSON) {
+                console.log("Working");
+            }); 
+          })
       .catch(function(error) {
           console.log(error);
-          })
+          });
       });
-  
-
-  
     });
   });
 
