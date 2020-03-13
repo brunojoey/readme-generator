@@ -1,12 +1,12 @@
-var inquirer = require("inquirer");
-var fs = require("fs");
+const inquirer = require("inquirer");
+const axios = require("axios")
+const fs = require("fs");
+const util = require("util");
 
-inquirer.prompt([
-    {
-        type: "input",
-        message: "What is your GitHub username?",
-        name: "username"
-    },
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
+
+const questions = [
     {
         type: "input",
         message: "What would you like your title of your README to be?",
@@ -55,16 +55,35 @@ inquirer.prompt([
     {
         type: "input",
         message: "please add any questions that you believe would be helpful to the project.",
-        name: "questions"
+        name: "questionAsked"
     }
-]).then(function(data){
-    var fileName = data.name.join(" ") + ".md";
-    fs.writeFile(fileName, JSON.stringify(data, null, "\t"), function(error) {
-        if (error) {
-            return console.log(error);
-        } console.log("Success");
-    })
+];
 
+
+inquirer.prompt({
+    message: "Enter your GitHub username",
+    name: "username"
 })
+.then(function({ username }) {
+    const queryUrl = `https://api.github.com/users/${username}`;
 
+
+    axios 
+    .get(`https://api.github.com/users/${username}`)
+    .then(function(response){
+      console.log(response.data);
+      const questionsJSON = JSON.stringify(questions);
+      console.log(questionsJSON);
+      const { data } = response.data;
+      writeFileAsync(`${ username }README.md`, data, function(error) {
+          readFileAsync("index.js", questionsJSON,"utf8")
+      .catch(function(error) {
+          console.log(error);
+          })
+      });
+  
+
+  
+    });
+  });
 
