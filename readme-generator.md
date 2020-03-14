@@ -1,4 +1,3 @@
-
 # README Generator
 
 ## Description
@@ -8,11 +7,11 @@ This generator will help you create a README for your projects. It can help you 
 Joey Bruno
 
 ## Table of Contents
-Installation, Usage, Contributing, License, Credits, Badges, Test, Contact
+Badges, Installation, Usage, License, FAQ, Contributing
     
 ## Badges
 ![badge](https://img.shields.io/badge/license-MIT-green)
-JavaScript,Node.js
+JavaScript, Node.js
 
 ## Installation
 To install this application you clone the SSH Key from the main hub page of this repository and you paste that clone link into your Terminal.
