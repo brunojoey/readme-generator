@@ -95,37 +95,37 @@ function generateMarkdown(data) {
     const { gitData } = data;
     const { questionsData } = data;
     return `
-    # ${questionsData.title}
+# ${questionsData.title}
 
-    ## Description
-    ${questionsData.description}
+## Description
+${questionsData.description}
     
-    ## Author(s)
-    ${questionsData.authors}
+## Author(s)
+${questionsData.authors}
 
-    ## Table of Contents
-    ${questionsData.contents}
+## Table of Contents
+${questionsData.contents}
     
-    ## Badges
-    ![badge](https://img.shields.io/badge/license-MIT-green)
-    ${questionsData.badges}
+## Badges
+![badge](https://img.shields.io/badge/license-MIT-green)
+${questionsData.badges}
 
-    ## Installation
-    ${questionsData.installation}
+## Installation
+${questionsData.installation}
     
-    ## Usage
-    ${questionsData.usage}
+## Usage
+${questionsData.usage}
 
-    ## License
-    ${questionsData.license}
+## License
+${questionsData.license}
 
-    ## FAQ
-    ${questionsData.faq}
+## FAQ
+${questionsData.faq}
 
-    ## Contributions
-    ${questionsData.contributions}
+## Contributions
+${questionsData.contributions}
 
-    ![GitHub Avatar](${gitData.avatar_url})
+![GitHub Avatar](${gitData.avatar_url})
     
     `;
 };
