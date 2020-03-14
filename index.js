@@ -1,14 +1,14 @@
 const inquirer = require("inquirer");
 const axios = require("axios")
 const fs = require("fs");
-const util = require("util");
-
-const readFileAsync = util.promisify(fs.readFile);
-const writeFileAsync = util.promisify(fs.writeFile);
-
-const userInput = [];
 
 const questions = [
+    {
+        type: "input",
+        message: "What is your gitHub username?",
+        name: "username"
+
+    },
     {
         type: "input",
         message: "What would you like your title of your README to be?",
@@ -16,22 +16,57 @@ const questions = [
     },
     {
         type: "input",
-        message: "Please put a description to your project for your README.",
+        message: "Please put a description of your project for your README.",
         name: "description"
     },
     {
         type: "input",
-        message: "May you please include a Table of Contents.",
-        name: "contents"
+        message: "Who created this project?",
+        name: "authors"
+    },
+    {
+        type: "checkbox",
+        message: "What would you want to include in your Table of Contents?",
+        name: "contents",
+        choices: [
+            { name: "Installation", checked: true },
+            { name: " Usage", checked: true },
+            { name: " Contributing", checked: true },
+            { name: " License", checked: true },
+            { name: " Credits", checked: true },
+            { name: " Badges", checked: true },
+            { name: " Test", checked: true },
+            { name: " Contact", checked: true }
+        ]
+    },
+    {
+        type: "checkbox",
+        message: "What Languages are you using?",
+        name: "badges",
+        choices: [
+            { name: "HTML", checked: true },
+            { name: "CSS", checked: true },
+            { name: "JavaScript", checked: true },
+            { name: "jQuery", checked: true },
+            { name: "Node.js", checked: false },
+            { name: "React.js", checked: false },
+            { name: "Angular.js", checked: false },
+            { name: "Vue.js", checked: false },
+            { name: "Python", checked: false },
+            { name: "Django", checked: false },
+            { name: "Ruby", checked: false },
+            { name: "Rails", checked: false },
+            { name: "Go", checked: false },
+        ]
     },
     {
         type: "input",
-        message: "Please explain the installation process of your project.",
+        message: "What do users need to know about installing your application?",
         name: "installation"
     },
     {
         type: "input",
-        message: "what is the usage of your project?",
+        message: "How does a user use your application?",
         name: "usage"
     },
     {
@@ -39,58 +74,86 @@ const questions = [
         message: "Please select a license for your project.",
         name: "license",
         choices: [
-            "None",
-            "Blah",
-            "Blah"
+            "MIT",
+            "APACHE",
+            "GNU GPLv3",
+            "ISC",
+            "Rust"
         ]
+    },
+    {
+        type: "input",
+        message: "Any necessary FAQ's?",
+        name: "faq"
     },
     {
         type: "input",
         message: "Please add any contributions to the README.",
         name: "contributions"
-    },
-    {
-        type: "input",
-        message: "Please include tests of your project.",
-        name: "test"
-    },
-    {
-        type: "input",
-        message: "please add any questions that you believe would be helpful to the project.",
-        name: "questionAsked"
     }
 ];
 
-// const questionsMessage  = questions.message;
-// const [ questionsName ]  = questions.name; 
-// // const [ questionsNameMessage ] = questionsMessage + "\n" + questionsName;
-// console.log(questionsNameMessage);
+function generateMarkdown(data) {
+    const { gitData } = data;
+    const { questionsData } = data;
+    return `
+    # ${questionsData.title}
 
-inquirer.prompt({
-    message: "Enter your GitHub username",
-    name: "username"
-})
-    .then(function ({ username }) {
-        const queryUrl = `https://api.github.com/users/${username}`;
+    ## Description
+    ${questionsData.description}
+    
+    ## Author(s)
+    ${questionsData.authors}
 
-        axios
-            .get(queryUrl)
-            .then(function (response) {
-                const data = response.data;
-                console.log(response.data);
-                const email = data.email;
-                const avatar = data.avatar_url;
-                const questionsJSON = JSON.stringify(questions);
-                writeFileAsync(`${username}-README.md`, questionsJSON).then(function () {
-                    readFileAsync("index.js", avatar).then(function () {
-                        questions.forEach(function (questionsJSON) {
-                            console.log("Working");
-                        });
-                    })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                });
-            });
-    });
+    ## Table of Contents
+    ${questionsData.contents}
+    
+    ## Badges
+    ![badge](https://img.shields.io/badge/license-MIT-green)
+    ${questionsData.badges}
+
+    ## Installation
+    ${questionsData.installation}
+    
+    ## Usage
+    ${questionsData.usage}
+
+    ## License
+    ${questionsData.license}
+
+    ## FAQ
+    ${questionsData.faq}
+
+    ## Contributions
+    ${questionsData.contributions}
+
+    ![GitHub Avatar](${gitData.avatar_url})
+    
+    `;
+};
+
+inquirer.prompt(questions).then(async function(response){
+    const queryUrl = `https://api.github.com/users/${response.username}`;
+    axios.get(queryUrl);
+    var gitHubInfo = await axios(queryUrl);
+    const data = {
+        gitData: gitHubInfo.data,
+        questionsData: response
+    };
+    var markDown = await generateMarkdown(data);
+    writeMarkdown(response.title, markDown);
+});
+
+function writeMarkdown(fileName, data){
+    fs.writeFile(`${fileName}.md`, data, function(error) {
+        if (error) {
+          return console.log(error);
+        }
+        console.log("Success!");
+      });
+};
+
+module.exports = {generateMarkdown};
+
+
 
